@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""
-Provides stats about Nginx logs stored in MongoDB
-"""
+"""Provides stats about Nginx logs stored in MongoDB."""
 from pymongo import MongoClient
 
 
-if __name__ == "__main__":
+def log_stats():
+    """Display stats about Nginx logs stored in MongoDB."""
     client = MongoClient('mongodb://127.0.0.1:27017')
     collection = client.logs.nginx
     print("{} logs".format(collection.count_documents({})))
@@ -18,3 +17,7 @@ if __name__ == "__main__":
     print("{} status check".format(
         collection.count_documents({"method": "GET", "path": "/status"})
     ))
+
+
+if __name__ == "__main__":
+    log_stats()

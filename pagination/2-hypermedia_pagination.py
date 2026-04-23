@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Module providing simple pagination for a dataset of popular baby names."""
+"""Module providing hypermedia pagination for a baby names dataset."""
 import csv
 import math
-from typing import List
+from typing import List, Dict, Any
 
 
 def index_range(page: int, page_size: int) -> tuple:
@@ -61,3 +61,35 @@ class Server:
             return []
 
         return dataset[start:end]
+
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+        """Return a dictionary of pagination metadata along with the data page.
+
+        Args:
+            page: The page number to retrieve (1-indexed, default is 1).
+            page_size: The number of records per page (default is 10).
+
+        Returns:
+            A dictionary containing the following keys:
+                - page_size: length of the returned dataset page
+                - page: the current page number
+                - data: the dataset page
+                - next_page: number of the next page, or None if no next page
+                - prev_page: number of the previous page, or None if no prev
+                - total_pages: total number of pages in the dataset as an int
+        """
+        data = self.get_page(page, page_size)
+        total_records = len(self.dataset())
+        total_pages = math.ceil(total_records / page_size)
+
+        next_page = page + 1 if page < total_pages else None
+        prev_page = page - 1 if page > 1 else None
+
+        return {
+            'page_size': len(data),
+            'page': page,
+            'data': data,
+            'next_page': next_page,
+            'prev_page': prev_page,
+            'total_pages': total_pages,
+        }

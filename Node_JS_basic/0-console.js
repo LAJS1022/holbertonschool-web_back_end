@@ -1,6 +1,6 @@
-//0-console.js
+// 0-console.js                                                                                                                                                      
 
-function displayMessage (message) {
+function displayMessage(message) {
   console.log(message);
 }
 
